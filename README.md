@@ -49,6 +49,7 @@ Write your own steps
 ## PROGRAM
 
 ~~~
+
 import os
 import pandas as pd
 import numpy as np
@@ -62,15 +63,14 @@ from tensorflow.keras import utils
 from tensorflow.keras import models
 from sklearn.metrics import classification_report,confusion_matrix
 import tensorflow as tf
-# to share the GPU resources for multiple sessions
+
+import tensorflow as tf
 from tensorflow.compat.v1.keras.backend import set_session
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True # dynamically grow the memory used on the GPU
 config.log_device_placement = True # to log device placement (on which device the operation ran)
 sess = tf.compat.v1.Session(config=config)
 set_session(sess)
-
-%matplotlib inline
 
 my_data_dir = 'dataset/cell_images'
 
@@ -87,16 +87,15 @@ len(os.listdir(train_path+'/parasitized/'))
 
 os.listdir(train_path+'/parasitized')[560]
 
-para_img= imread(train_path+
-                 '/parasitized/'+
-                 os.listdir(train_path+'/parasitized')[560])
-                
+para_img= imread(train_path+'/parasitized/'+os.listdir(train_path+'/parasitized')[560])
+
 plt.imshow(para_img)
 
 uninfe_img= imread(train_path+
                  '/uninfected/'+
                  os.listdir(train_path+'/uninfected')[560])
-                
+
+
 plt.imshow(uninfe_img)
 
 # Checking the image dimensions
@@ -158,7 +157,8 @@ image_gen = ImageDataGenerator(rotation_range=40, # rotate the image 20 degrees
                                horizontal_flip=True, # Allo horizontal flipping
                                fill_mode='nearest' # Fill in missing pixels with the nearest filled value
                               )
-batch_size = 16
+
+batch_size = 16                            
 
 train_image_gen = image_gen.flow_from_directory(train_path,
                                                target_size=image_shape[:2],
@@ -173,7 +173,8 @@ test_image_gen = image_gen.flow_from_directory(test_path,
                                                color_mode='rgb',
                                                batch_size=batch_size,
                                                class_mode='binary',shuffle=False)
-            
+
+
 train_image_gen.class_indices
 
 results = model.fit(train_image_gen,epochs=4,
@@ -186,11 +187,13 @@ plot.head
 
 plot[['loss','val_loss']].plot()
 
+
 plot[['accuracy','val_accuracy']].plot()
 
 model.evaluate(test_image_gen)
 
 pred_probabilities = model.predict(test_image_gen)
+
 
 test_image_gen.classes
 
@@ -215,17 +218,6 @@ plt.title("Model prediction: "+("Parasitized" if pred  else "Uninfected")+"\nAct
 plt.axis("off")
 plt.imshow(img)
 plt.show()
-
-import random
-import tensorflow as tf
-# list_dir=["uninfected","parasitized"]
-# dir_=(random.choice(list_dir))
-# para_img= imread(train_path+
-#                  '/'+dir_+'/'+
-#                  os.listdir(train_path+'/'+dir_)[random.randint(0,100)])
-para_img = imread('Rajeshkannan- uninfected.png')
-plt.imshow(para_img)
-
 
 
 ~~~
